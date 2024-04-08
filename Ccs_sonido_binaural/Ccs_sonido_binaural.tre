@@ -1,0 +1,7 @@
+ÀÄCcs_sonido_binaural
+   ÃÄMAIN  0/124  Ram=0
+   ³  ÀÄ@cinit1  (Inline)  Ram=0
+   ÃÄEXT  0/32  Ram=0
+   ³  ÀÄ@delay_ms1  (Inline)  Ram=1
+   ÃÄTIMER_0  0/16  Ram=0
+   ÀÄreset_timer  0/51  Ram=0

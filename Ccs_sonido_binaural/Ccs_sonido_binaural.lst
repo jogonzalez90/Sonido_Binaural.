@@ -1,0 +1,459 @@
+CCS PCM C Compiler, Version 5.015, 5967               04-abr.-24 11:29
+
+               Filename:   C:\disco_e\Proyectos_pic\Sonido_binaural\Ccs_sonido_binaural\Ccs_sonido_binaural.lst
+
+               ROM used:   287 words (14%)
+                           Largest free fragment is 1761
+               RAM used:   14 (11%) at main() level
+                           15 (12%) worst case
+               Stack used: 1 locations (0 in main + 1 for interrupts)
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   0A3
+0003:  NOP
+0004:  BTFSC  03.5
+0005:  GOTO   00A
+0006:  MOVWF  24
+0007:  SWAPF  03,W
+0008:  MOVWF  25
+0009:  GOTO   00F
+000A:  BCF    03.5
+000B:  MOVWF  24
+000C:  SWAPF  03,W
+000D:  MOVWF  25
+000E:  BSF    25.1
+000F:  MOVF   0A,W
+0010:  MOVWF  2B
+0011:  CLRF   0A
+0012:  BCF    03.7
+0013:  SWAPF  24,F
+0014:  MOVF   04,W
+0015:  MOVWF  26
+0016:  MOVF   20,W
+0017:  MOVWF  27
+0018:  MOVF   21,W
+0019:  MOVWF  28
+001A:  MOVF   22,W
+001B:  MOVWF  29
+001C:  MOVF   23,W
+001D:  MOVWF  2A
+001E:  BCF    03.5
+001F:  BTFSS  0B.5
+0020:  GOTO   023
+0021:  BTFSC  0B.2
+0022:  GOTO   060
+0023:  BTFSS  0B.4
+0024:  GOTO   027
+0025:  BTFSC  0B.1
+0026:  GOTO   040
+0027:  MOVLW  8C
+0028:  MOVWF  04
+0029:  BTFSS  00.0
+002A:  GOTO   02D
+002B:  BTFSC  0C.0
+002C:  GOTO   070
+002D:  MOVF   26,W
+002E:  MOVWF  04
+002F:  MOVF   27,W
+0030:  MOVWF  20
+0031:  MOVF   28,W
+0032:  MOVWF  21
+0033:  MOVF   29,W
+0034:  MOVWF  22
+0035:  MOVF   2A,W
+0036:  MOVWF  23
+0037:  MOVF   2B,W
+0038:  MOVWF  0A
+0039:  SWAPF  25,W
+003A:  MOVWF  03
+003B:  BCF    03.5
+003C:  SWAPF  24,W
+003D:  BTFSC  25.1
+003E:  BSF    03.5
+003F:  RETFIE
+....................  /////////////////////////////////////////////////////////////////////////////////////// 
+....................  //                            Prototipo Sonido Binaural                              // 
+....................  //                          Desarollado con PIC16F716                                // 
+....................  //         Se implementa el Timer 0 para generar señal fundamental 50 Hz             // 
+....................  //                               Nueve Frecuencias                                   // 
+....................  //               Ingeniero Electrónico Johans González CN206-162442                  // 
+....................  //                               Junio 28 del 2023                                   // 
+....................  /////////////////////////////////////////////////////////////////////////////////////// 
+....................   
+.................... //Delta 0.1-3.5 Hz. Relajación más profunda, sanación más profunda, conexión espirtual más profunda, conexión más profunda con la mente subconsciente.   
+.................... //Theta 3.5-7.5 Hz. Salud y bienestar general. Conexión espírutual y unidad con el universo. Inspiración, intuición y creatividad. Paz interior, estabilidad emocional. 
+.................... //Reducción ansiedad y estrés. 
+.................... //Alfa 8-14 Hz. Puente entre mente consciente y subconsciente (mucho más receptiva a la programción). Apropiada para afirmaciones y visualizaciones.  
+.................... //Aprendizaje y concentración. Producción de Dopamina y Serotonina (manejo de la depresión). 
+.................... //Beta 14-40 Hz. Mejora la lógica, el razonamiento y el pensamiento crítico. 
+.................... //Gamma 40 Hz. Aumenta la actividad mental, percepción y resolución de problemas. 
+....................  
+.................... #include <Ccs_sonido_binaural.h> 
+.................... #include <16F716.h> 
+.................... //////////// Standard Header file for the PIC16F716 device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F716 
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                 	//No Watch Dog Timer 
+.................... #FUSES NOBROWNOUT            	//No brownout reset 
+....................  
+.................... #use delay(crystal=4MHz) 
+*
+0042:  MOVLW  2E
+0043:  MOVWF  04
+0044:  MOVF   00,W
+0045:  BTFSC  03.2
+0046:  GOTO   055
+0047:  MOVLW  01
+0048:  MOVWF  21
+0049:  CLRF   20
+004A:  DECFSZ 20,F
+004B:  GOTO   04A
+004C:  DECFSZ 21,F
+004D:  GOTO   049
+004E:  MOVLW  4A
+004F:  MOVWF  20
+0050:  DECFSZ 20,F
+0051:  GOTO   050
+0052:  GOTO   053
+0053:  DECFSZ 00,F
+0054:  GOTO   047
+....................  
+....................  
+....................  
+.................... //DECLARACIONES DEFINE PILOTOS MODO ACTUAL 
+.................... #DEFINE Delta PIN_A0 
+.................... #DEFINE Theta PIN_A1 
+.................... #DEFINE Alfa PIN_A2 
+.................... #DEFINE Beta PIN_A3 
+.................... #DEFINE Gamma PIN_B3 
+.................... //SEÑALES FUNDAMENTAL Fun (50Hz) Y BINAURAL Binau (Delta, Theta, Alfa, Beta, Gamma). 
+.................... #DEFINE Fund PIN_B1 
+.................... #DEFINE Binau PIN_B2 
+....................  
+.................... //VARIBLES A USAR 
+.................... INT CONTADOR=87;//Cantidad de veces a debordar Timer 0 para lograr 0.01 segundo 
+.................... INT TM1=1;//Variable para mode del estimulador 
+....................  
+....................   #INT_EXT//DIRECTIVA INTERRUPCION PIN RB_0 
+....................    VOID EXT(VOID) 
+....................    { 
+....................       DELAY_MS(200);//Retardo antirrebotes 
+*
+0040:  MOVLW  C8
+0041:  MOVWF  2E
+....................       TM1+=1;//Bandera cambio mode 1(Delta), 2(Theta), 3(Alfa), 4(Beta) y 5(Gamma) 
+*
+0055:  MOVLW  01
+0056:  ADDWF  2D,F
+....................       IF(TM1==6) 
+0057:  MOVF   2D,W
+0058:  SUBLW  06
+0059:  BTFSS  03.2
+005A:  GOTO   05D
+....................       { 
+....................          TM1=1;//Retornamos a modo 1 
+005B:  MOVLW  01
+005C:  MOVWF  2D
+....................       } 
+....................    } 
+....................  
+005D:  BCF    0B.1
+005E:  BCF    0A.3
+005F:  GOTO   02D
+....................  #INT_RTCC//DIRECTIVA INTERRUPCION TIMER_0 PARA LOGRAR CAMBIO DE ESTADO EN PIN_B1 DE CADA 0.01S, FRECUENCIA DE 50 HZ 
+....................    VOID TIMER_0(VOID) 
+....................    { 
+....................       CONTADOR--; 
+0060:  DECF   2C,F
+....................       SET_RTCC(246);//Valor a cargar en Timer 0, para lograr con variable contador 0.01 segundo 
+0061:  MOVLW  F6
+0062:  MOVWF  01
+....................        
+....................       IF (CONTADOR==0) 
+0063:  MOVF   2C,F
+0064:  BTFSS  03.2
+0065:  GOTO   06D
+....................       { 
+....................          OUTPUT_TOGGLE(Fund); 
+0066:  BSF    03.5
+0067:  BCF    06.1
+0068:  MOVLW  02
+0069:  BCF    03.5
+006A:  XORWF  06,F
+....................          CONTADOR=87;//Numero de veces que debe reiniciar el Timer 0 para lograr 0.01 segundo 
+006B:  MOVLW  57
+006C:  MOVWF  2C
+....................       }   
+....................    } 
+....................     
+006D:  BCF    0B.2
+006E:  BCF    0A.3
+006F:  GOTO   02D
+....................  #INT_TIMER1//DIRECTIVA INTERRUPCION TIMER_1 PARA LOGRAR CAMBIO DE ESTADO EN PIN_B2 SEGÚN MODO DE OPERACIÓN 
+....................    void reset_timer() 
+....................    { 
+....................       switch(TM1) 
+0070:  MOVF   2D,W
+0071:  XORLW  01
+0072:  BTFSC  03.2
+0073:  GOTO   07E
+0074:  XORLW  03
+0075:  BTFSC  03.2
+0076:  GOTO   084
+0077:  XORLW  01
+0078:  BTFSC  03.2
+0079:  GOTO   08A
+007A:  XORLW  07
+007B:  BTFSC  03.2
+007C:  GOTO   090
+007D:  GOTO   096
+....................       { 
+....................    case 1://Mode Delta, sonido 53 Hz(0.5Hz-4Hz) sobre la fundamental(50Hz). 
+....................         set_timer1(56106); 
+007E:  CLRF   0E
+007F:  MOVLW  DB
+0080:  MOVWF  0F
+0081:  MOVLW  2A
+0082:  MOVWF  0E
+....................         break; 
+0083:  GOTO   09B
+....................    case 2://Mode Theta, sonido 56 Hz(4Hz-7Hz) sobre la fundamental(50Hz). 
+....................         set_timer1(56625); 
+0084:  CLRF   0E
+0085:  MOVLW  DD
+0086:  MOVWF  0F
+0087:  MOVLW  31
+0088:  MOVWF  0E
+....................         break; 
+0089:  GOTO   09B
+....................    case 3://Mode Alfa, sonido 62 Hz(7Hz-13Hz) sobre la fundamental(50Hz). 
+....................         set_timer1(57472); 
+008A:  CLRF   0E
+008B:  MOVLW  E0
+008C:  MOVWF  0F
+008D:  MOVLW  80
+008E:  MOVWF  0E
+....................         break; 
+008F:  GOTO   09B
+....................    case 4://Mode Beta, sonido 79 Hz(13Hz-30Hz) sobre la fundamental(50Hz). 
+....................         set_timer1(59207); 
+0090:  CLRF   0E
+0091:  MOVLW  E7
+0092:  MOVWF  0F
+0093:  MOVLW  47
+0094:  MOVWF  0E
+....................         break; 
+0095:  GOTO   09B
+....................    default ://Mode Gamma, sonido 90 Hz(40Hz) sobre la fundamental(50Hz). 
+....................        set_timer1(60171); 
+0096:  CLRF   0E
+0097:  MOVLW  EB
+0098:  MOVWF  0F
+0099:  MOVLW  0B
+009A:  MOVWF  0E
+....................       } 
+....................       OUTPUT_TOGGLE(Binau); //cambia el estado de salida 
+009B:  BSF    03.5
+009C:  BCF    06.2
+009D:  MOVLW  04
+009E:  BCF    03.5
+009F:  XORWF  06,F
+00A0:  BCF    0C.0
+00A1:  BCF    0A.3
+00A2:  GOTO   02D
+....................    } 
+.................... void main() 
+00A3:  MOVF   03,W
+00A4:  ANDLW  1F
+00A5:  MOVWF  03
+00A6:  MOVLW  57
+00A7:  MOVWF  2C
+00A8:  MOVLW  01
+00A9:  MOVWF  2D
+00AA:  BSF    03.5
+00AB:  BSF    1F.0
+00AC:  BSF    1F.1
+00AD:  BSF    1F.2
+.................... { 
+....................    SETUP_TIMER_0(RTCC_INTERNAL|RTCC_DIV_8);//CONFIGUARMOS TIMER_0 preescaler 8 para lograr con varible contador y valor inicial de Timer, 0.01 segundo 
+00AE:  MOVF   01,W
+00AF:  ANDLW  C0
+00B0:  IORLW  02
+00B1:  MOVWF  01
+....................    SETUP_TIMER_1(T1_INTERNAL|T1_DIV_BY_1);//CONFIGUARMOS TIMER_1 preescaler 1 
+00B2:  MOVLW  85
+00B3:  BCF    03.5
+00B4:  MOVWF  10
+....................    ENABLE_INTERRUPTS(INT_TIMER1);//HABILITAMOS INTERRUPCION DESBORDAMIENTO TIMER_1 
+00B5:  BSF    03.5
+00B6:  BSF    0C.0
+....................    ENABLE_INTERRUPTS(INT_RTCC);//HABILITAMOS INTERRUPCION DESBORDAMIENTO TIMER_0 
+00B7:  BCF    03.5
+00B8:  BSF    0B.5
+....................    ENABLE_INTERRUPTS(INT_EXT);//HABILITAMOS INTERRUPCION EXTERNA RB0/INT 
+00B9:  BSF    0B.4
+....................    ENABLE_INTERRUPTS(GLOBAL);//HABILITAMOS INTERRUPCIONES GLOBALES 
+00BA:  MOVLW  C0
+00BB:  IORWF  0B,F
+....................     
+....................    SET_RTCC(246);//Valor a cargar en Timer 0, para lograr con variable contador 0.01 segundo 
+00BC:  MOVLW  F6
+00BD:  MOVWF  01
+....................    SET_TIMER1(56106);//Valor a cargar en Timer 1 
+00BE:  CLRF   0E
+00BF:  MOVLW  DB
+00C0:  MOVWF  0F
+00C1:  MOVLW  2A
+00C2:  MOVWF  0E
+....................     
+....................    set_tris_a(0x00);//Puerto A como salida 
+00C3:  MOVLW  00
+00C4:  BSF    03.5
+00C5:  MOVWF  05
+....................    SET_TRIS_B(0B00000001);//RB0 como entrada para implementra INT EXT, adicionales salidas 
+00C6:  MOVLW  01
+00C7:  MOVWF  06
+....................     
+....................    //INICIALIZAMOS SALIDAS 
+....................    OUTPUT_LOW(Fund); 
+00C8:  BCF    06.1
+00C9:  BCF    03.5
+00CA:  BCF    06.1
+....................    OUTPUT_LOW(Binau); 
+00CB:  BSF    03.5
+00CC:  BCF    06.2
+00CD:  BCF    03.5
+00CE:  BCF    06.2
+....................    OUTPUT_LOW(Delta); 
+00CF:  BSF    03.5
+00D0:  BCF    05.0
+00D1:  BCF    03.5
+00D2:  BCF    05.0
+....................    OUTPUT_LOW(Theta); 
+00D3:  BSF    03.5
+00D4:  BCF    05.1
+00D5:  BCF    03.5
+00D6:  BCF    05.1
+....................    OUTPUT_LOW(Alfa); 
+00D7:  BSF    03.5
+00D8:  BCF    05.2
+00D9:  BCF    03.5
+00DA:  BCF    05.2
+....................    OUTPUT_LOW(Beta); 
+00DB:  BSF    03.5
+00DC:  BCF    05.3
+00DD:  BCF    03.5
+00DE:  BCF    05.3
+....................    OUTPUT_LOW(Gamma); 
+00DF:  BSF    03.5
+00E0:  BCF    06.3
+00E1:  BCF    03.5
+00E2:  BCF    06.3
+....................     
+....................    while(TRUE) 
+....................    { 
+....................       switch(TM1)//Encendemos pilotos según la frecuencia de estimulación actual 
+00E3:  MOVF   2D,W
+00E4:  XORLW  01
+00E5:  BTFSC  03.2
+00E6:  GOTO   0F1
+00E7:  XORLW  03
+00E8:  BTFSC  03.2
+00E9:  GOTO   0FA
+00EA:  XORLW  01
+00EB:  BTFSC  03.2
+00EC:  GOTO   103
+00ED:  XORLW  07
+00EE:  BTFSC  03.2
+00EF:  GOTO   10C
+00F0:  GOTO   115
+....................       { 
+....................    case 1://Piloto Delta, sonido 53 Hz(0.5Hz-4Hz) sobre la fundamental(50Hz). 
+....................         OUTPUT_LOW(Gamma);//Off Gamma 
+00F1:  BSF    03.5
+00F2:  BCF    06.3
+00F3:  BCF    03.5
+00F4:  BCF    06.3
+....................         OUTPUT_HIGH(Delta);//On Delta 
+00F5:  BSF    03.5
+00F6:  BCF    05.0
+00F7:  BCF    03.5
+00F8:  BSF    05.0
+....................         break; 
+00F9:  GOTO   11D
+....................    case 2://Piloto Theta, sonido 56 Hz(4Hz-7Hz) sobre la fundamental(50Hz). 
+....................         OUTPUT_LOW(Delta);//Off Delta 
+00FA:  BSF    03.5
+00FB:  BCF    05.0
+00FC:  BCF    03.5
+00FD:  BCF    05.0
+....................         OUTPUT_HIGH(Theta);//On Theta 
+00FE:  BSF    03.5
+00FF:  BCF    05.1
+0100:  BCF    03.5
+0101:  BSF    05.1
+....................         break; 
+0102:  GOTO   11D
+....................    case 3://Piloto Alfa, sonido 62 Hz(7Hz-13Hz) sobre la fundamental(50Hz). 
+....................         OUTPUT_LOW(Theta);//Off Theta 
+0103:  BSF    03.5
+0104:  BCF    05.1
+0105:  BCF    03.5
+0106:  BCF    05.1
+....................         OUTPUT_HIGH(Alfa);//On Alfa 
+0107:  BSF    03.5
+0108:  BCF    05.2
+0109:  BCF    03.5
+010A:  BSF    05.2
+....................         break; 
+010B:  GOTO   11D
+....................    case 4://Piloto Beta, sonido 79 Hz(13Hz-30Hz) sobre la fundamental(50Hz). 
+....................         OUTPUT_LOW(Alfa);//Off Alfa 
+010C:  BSF    03.5
+010D:  BCF    05.2
+010E:  BCF    03.5
+010F:  BCF    05.2
+....................         OUTPUT_HIGH(Beta);//On Beta 
+0110:  BSF    03.5
+0111:  BCF    05.3
+0112:  BCF    03.5
+0113:  BSF    05.3
+....................         break; 
+0114:  GOTO   11D
+....................    default ://Piloto Gamma, sonido 90 Hz(40Hz) sobre la fundamental(50Hz). 
+....................         OUTPUT_LOW(Beta);//Off Beta 
+0115:  BSF    03.5
+0116:  BCF    05.3
+0117:  BCF    03.5
+0118:  BCF    05.3
+....................         OUTPUT_HIGH(Gamma);//On Gamma 
+0119:  BSF    03.5
+011A:  BCF    06.3
+011B:  BCF    03.5
+011C:  BSF    06.3
+....................       } 
+011D:  GOTO   0E3
+....................    } 
+.................... } 
+....................  
+011E:  SLEEP
+....................  
+
+Configuration Fuses:
+   Word  1: 3FB1   XT NOWDT PUT NOBROWNOUT BORV40 NOPROTECT

@@ -1,0 +1,63 @@
+004-005 @READ_PROGRAM_MEMORY8.P1
+015     CCP_1
+015     CCP_1_LOW
+016     CCP_1_HIGH
+020     @SCRATCH
+021     @SCRATCH
+021     _RETURN_
+022     @SCRATCH
+023     @SCRATCH
+024     @INTERRUPT_AREA
+025     @INTERRUPT_AREA
+026     @INTERRUPT_AREA
+027     @INTERRUPT_AREA
+028     @INTERRUPT_AREA
+029     @INTERRUPT_AREA
+02A     @INTERRUPT_AREA
+02B     @INTERRUPT_AREA
+02C     CONTADOR
+02D     TM1
+02E     @delay_ms1.P1
+10D-10E @READ_PROGRAM_MEMORY8.P1
+
+ROM Allocation:
+000040  EXT
+000042  @delay_ms1
+000060  TIMER_0
+000070  reset_timer
+0000A3  MAIN
+0000A3  @cinit1
+0000AE  @cinit2
+
+Project Directory:
+    C:\disco_e\Proyectos_pic\Sonido_binaural\Ccs_sonido_binaural\
+
+Project Files:
+    Ccs_sonido_binaural.c                                   [04-abr.-24 11:01  CRC=88928B10]
+    Ccs_sonido_binaural.h                                   [04-abr.-24 11:01  CRC=D872A938]
+    ..\..\..\..\Program Files (x86)\PICC\Devices\16F716.h   [12-nov.-13 14:34  CRC=4D6D2101]
+
+Source signature=FBDF764A
+
+Units:
+    Ccs_sonido_binaural (main)
+
+Compiler Settings:
+    Processor:      PIC16F716
+    Pointer Size:   8
+    ADC Range:      0-65535
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    XREF file:   Ccs_sonido_binaural.xsym
+    Errors:      Ccs_sonido_binaural.err
+    Ext Symbols: Ccs_sonido_binaural.esym
+    INHX8:       Ccs_sonido_binaural.hex
+    Symbols:     Ccs_sonido_binaural.sym
+    List:        Ccs_sonido_binaural.lst
+    Debug/COFF:  Ccs_sonido_binaural.cof
+    Project:     Ccs_sonido_binaural.ccspjt
+    Call Tree:   Ccs_sonido_binaural.tre
+    Statistics:  Ccs_sonido_binaural.STA

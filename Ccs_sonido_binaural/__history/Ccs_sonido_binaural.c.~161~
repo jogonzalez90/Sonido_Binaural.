@@ -1,0 +1,104 @@
+#include <Ccs_sonido_binaural.h>
+
+//DECLARACIONES DEFINE
+#DEFINE Delta PIN_A0
+#DEFINE Theta PIN_A1
+#DEFINE Indi_3 PIN_A2
+#DEFINE Indi_4 PIN_A3
+
+//VARIBLES A USAR
+INT CONTADOR=87;//Cantidad de veces a debordar Timer 0 para lograr 0.01 segundo
+INT TM1=1;//Variable para mode
+
+  #INT_EXT//DIRECTIVA INTERRUPCION PIN RB_0
+   VOID EXT(VOID)
+   {
+      TM1+=1;//Bandera cambio mode 1(Delta), 2(Theta), 3(Alfa) y 4(Beta)
+      IF(TM1==5)
+      {
+         TM1=1;//Retornamos a modo 0
+      }
+   }
+
+ #INT_RTCC//DIRECTIVA INTERRUPCION TIMER_0
+   VOID TIMER_0(VOID)
+   {
+      CONTADOR--;
+      SET_RTCC(246);//Valor a cargar en Timer 0, para lograr con variable contador 0.01 segundo
+      
+      //Ingresa al codicional, si ha transcurrido 1 segungo
+      IF (CONTADOR==0)
+      {
+         OUTPUT_TOGGLE(PIN_B1);
+         CONTADOR=87;//Numero de veces que debe reiniciar el Timer 0 para lograr 0.01 segundo 125
+      }  
+   }
+   
+ #INT_TIMER1
+   void reset_timer()
+   {
+      switch(TM1)
+      {
+   case 1://Mode Delta, sonido 53 Hz(0.5Hz-4Hz) sobre la fundamental(50Hz).
+        set_timer1(56106);
+        break;
+   case 2://Mode Theta, sonido 56 Hz(4Hz-7Hz) sobre la fundamental(50Hz).
+        set_timer1(56608);
+        break;
+   case 3://Mode Alfa, sonido 62 Hz(7Hz-13Hz) sobre la fundamental(50Hz).
+        set_timer1(57472);
+        break;
+   default ://Mode Beta, sonido 79 Hz(13Hz-30Hz) sobre la fundamental(50Hz).
+       set_timer1(59207);
+      }
+      OUTPUT_TOGGLE(PIN_B2); //cambia el estado de salida
+   }
+void main()
+{
+   SETUP_TIMER_0(RTCC_INTERNAL|RTCC_DIV_8);//CONFIGUARMOS TIMER_0 preescaler 8 para lograr con varible contador y valor inicial de Timer, 0.01 segundo
+   SETUP_TIMER_1(T1_INTERNAL|T1_DIV_BY_1);//CONFIGUARMOS TIMER_1 preescaler 1
+   ENABLE_INTERRUPTS(INT_TIMER1);//HABILITAMOS INTERRUPCION DESBORDAMIENTO TIMER_1
+   ENABLE_INTERRUPTS(INT_RTCC);//HABILITAMOS INTERRUPCION DESBORDAMIENTO TIMER_0
+   ENABLE_INTERRUPTS(INT_EXT);//HABILITAMOS INTERRUPCION EXTERNA RB0/INT
+   ENABLE_INTERRUPTS(GLOBAL);//HABILITAMOS INTERRUPCIONES GLOBALES
+   
+   SET_RTCC(246);//Valor a cargar en Timer 0, para lograr con variable contador 0.01 segundo
+   SET_TIMER1(56106);//Valor a cargar en Timer 1
+   
+   set_tris_a(0x00);
+   SET_TRIS_B(0B00000001);
+   
+   //INICIALIZAMOS SALIDAS
+   OUTPUT_LOW(PIN_B1);
+   OUTPUT_LOW(PIN_B2);
+   OUTPUT_LOW(PIN_B3);
+   OUTPUT_LOW(PIN_B4);
+   OUTPUT_LOW(PIN_B5);
+   OUTPUT_LOW(PIN_B6);
+   OUTPUT_LOW(PIN_B7);
+   
+   while(TRUE)
+   {
+      switch(TM1)
+      {
+   case 1://Piloto Delta, sonido 53 Hz(0.5Hz-4Hz) sobre la fundamental(50Hz).
+        OUTPUT_LOW(Indi_4);//Off Beta
+        OUTPUT_HIGH(Delta);//On Delta
+        break;
+   case 2://Piloto Theta, sonido 56 Hz(4Hz-7Hz) sobre la fundamental(50Hz).
+        OUTPUT_LOW(Delta);//Off Delta
+        OUTPUT_HIGH(Theta);//On Theta
+        break;
+   case 3://Piloto Alfa, sonido 62 Hz(7Hz-13Hz) sobre la fundamental(50Hz).
+        OUTPUT_LOW(Theta);//Off Theta
+        OUTPUT_HIGH(Indi_3);//On Alfa
+        break;
+   default ://Piloto Beta, sonido 79 Hz(13Hz-30Hz) sobre la fundamental(50Hz).
+        OUTPUT_LOW(Indi_3);//Off Alfa
+        OUTPUT_HIGH(Indi_4);//On Beta
+      }
+   }
+
+}
+
+

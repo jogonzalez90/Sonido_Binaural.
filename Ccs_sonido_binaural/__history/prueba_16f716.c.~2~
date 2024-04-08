@@ -1,0 +1,11 @@
+#include <prueba_16f716.h>
+
+void main()
+{
+   set_tris_b(0b01111111);
+   while(TRUE)
+   {
+      //TODO: User Code
+   }
+
+}

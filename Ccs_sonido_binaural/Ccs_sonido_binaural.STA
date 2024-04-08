@@ -1,0 +1,50 @@
+
+ROM used:   287/2048 (14%)
+            287/2048 (14%) including unused fragments
+
+            0.4 Average locations per line
+            5.1 Average locations per statement
+
+RAM used:   14/128 (11%) at main() level
+            15/128 (12%) worst case
+
+Stack used: 1 worst case (0 in main + 1 for interrupts)
+Stack size: 8
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  132    56 100  Ccs_sonido_binaural.c
+    9     0   0  Ccs_sonido_binaural.h
+  515     0   0  ..\..\..\..\Program Files (x86)\PICC\Devices\16F716.h
+----- -----
+  656    56 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+ Inline         1             @delay_ms1
+0     32  11    0    88  2.9  EXT
+0     16   6    0   102  2.9  TIMER_0
+0     51  18    0   247  3.6  reset_timer
+0    124  43    0   894  4.8  MAIN
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               4
+    Statements              56
+    Comments                179
+    Volume (V)              1718
+    Difficulty (D)          14.5
+    Effort to implement (E) 24945
+    Time to implement (T)   23 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   12
+    Maintainability (MI)    56
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-0003F    60  0  
+00040-007FF   223  1761  
+
+
+
